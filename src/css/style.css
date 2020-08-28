@@ -1,0 +1,15 @@
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: aqua;
+}
+
+h1.parent-component {
+    border: 1px solid #cacaca;
+}
+
+.child-component {
+    border: 1px dotted #cacaca;
+    padding: 10px;
+    font-size: 16px;
+    background-color: aquamarine;
+}
