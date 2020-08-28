@@ -13,3 +13,23 @@ h1.parent-component {
     font-size: 16px;
     background-color: aquamarine;
 }
+
+.active-child-component {
+    border: 1px solid red;
+    padding: 10px;
+    font-size: 18px;
+    background-color: azure;
+}
+
+.active-button {
+    background-color: greenyellow;
+    margin: 10px 0 0 0;
+    padding: 5px;
+    color: red;
+}
+
+.inactive-button {
+    background-color: lightblue;
+    margin: 10px 0 0 0;
+    padding: 5px;
+}
