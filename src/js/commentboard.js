@@ -1,3 +1,6 @@
+const SCROLLBAR_CLS = "scrollbar";
+const COMMENT_CLS = "comment";
+const COMMENTS_COUNT_FOR_SCROLL = 10;
 /**
  * Comment component for the board
  */
@@ -132,6 +135,30 @@ var Board = React.createClass({
     });
   },
   /**
+   * Render the comment counter
+   */
+  renderCommentCounter: function () {
+    let count = this.state.comments.length;
+    return (
+      count > 0 && (
+        <span className="comment-count">Comment Count : {count}</span>
+      )
+    );
+  },
+  /**
+   * When number of comments are greater than what can fit in the view-port
+   * then we should put a scroll bar on the comments page.
+   */
+  addScrollbar() {
+    if (window && typeof window == "object" && this.state.comments.length > 0) {
+      console.log(this.refs.commentBoxContainer);
+      if (this.state.comments.length > COMMENTS_COUNT_FOR_SCROLL) {
+        return `${COMMENT_CLS} ${SCROLLBAR_CLS}`;
+      }
+    }
+    return COMMENT_CLS;
+  },
+  /**
    * rendering the board
    */
   render: function () {
@@ -140,7 +167,17 @@ var Board = React.createClass({
         <button className="button-comment-add" onClick={this.addComment}>
           Add Comment
         </button>
-        {this.renderComments()}
+        {this.renderCommentCounter()}
+        <button
+          className="button-comment-reset"
+          disabled={this.state.comments.length == 0}
+          onClick={() => this.setState({ comments: [] })}
+        >
+          reset
+        </button>
+        <div ref="commentBoxContainer" className={this.addScrollbar()}>
+          {this.renderComments()}
+        </div>
       </div>
     );
   },

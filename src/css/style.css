@@ -78,3 +78,21 @@ h1.parent-component {
     text-transform: uppercase;
     font-weight: bold;
 }
+
+.comment-count {
+    background-color: aquamarine;
+    padding: 5px;
+}
+
+.scrollbar {
+    height: 600px;
+    overflow: auto;
+    border: 1px solid rebeccapurple
+}
+
+.button-comment-reset {
+    padding: 5px;
+    margin: 5px;
+    float: right;
+    text-transform: uppercase;
+}
