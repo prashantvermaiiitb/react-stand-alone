@@ -46,7 +46,6 @@ var Component = React.createClass({
 });
 
 /**
- * Showing multiple components created in the main parent.
- * Showing multiple components in the Dom using ReactDom.
+ * having the component here with props="1"
  */
 ReactDOM.render(<Component id="1" />, document.getElementById("example"));

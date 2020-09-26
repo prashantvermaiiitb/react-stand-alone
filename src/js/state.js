@@ -16,13 +16,11 @@ var Component = React.createClass({
     this.setState({ clicked: !this.state.clicked });
   },
   render: function () {
-    let text = `Hello World !! from ChildComponent - ${this.props.id}`;
+    let text = `Hello World !! from ChildComponent - ${this.props.id}, Is component clicked ? ${this.state.clicked}`;
     return (
       <div>
         <div
-          className={
-            this.state.clicked ? "active-child-component" : "child-component"
-          }
+          className={`${this.state.clicked ? "active-" : ""}child-component`}
         >
           {text}
         </div>

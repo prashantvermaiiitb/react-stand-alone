@@ -3,7 +3,21 @@
  */
 var Component = React.createClass({
   render: function () {
-    return <h1>Hello World !! from my new Component.</h1>;
+    return (
+      <div>
+        {React.createElement(
+          "h1",
+          {
+            style: { backgroundColor: "#cacaca" },
+            "data-update": "udpate",
+          },
+          <span>
+            {Math.floor(Math.random() * 100)} is generated from the JS.
+          </span>
+        )}
+        <h1>Hello World !! from my new Component.</h1>
+      </div>
+    );
   },
 });
 
