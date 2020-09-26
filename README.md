@@ -12,6 +12,7 @@ The sample will explain :-
 6. State, how and what it is ?
 7. Refs and their usage.
 8. Simple comment-board example to aggregate all the concepts.  
+9. Life-cycle hooks : componentDidMount()
   
   
 There is good tutorial about it from Mr. Buckey Roberts which I followed.
