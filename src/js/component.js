@@ -10,6 +10,7 @@ var Component = React.createClass({
           {
             style: { backgroundColor: "#cacaca" },
             "data-update": "udpate",
+            'data-update-1':{k:'hello-1'},//this will become [Object object]
           },
           <span>
             {Math.floor(Math.random() * 100)} is generated from the JS.
