@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lifecyclehooks.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lifecyclehooks.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Previously we have 1 component for the Board &amp; 1 for the comments for Edit/Save/Delete
+ * Now this has been divided to have the different components and also for the purpose of the
+ * Life-cycle hooks demonstration.
+ *
+ * Idea is to solve the issue of putting selection / focus of the full text when the text area
+ * is being rendered and after comment is being saved do any cleanup if you would like to.
+ *
+ */
+const SCROLLBAR_CLS = "scrollbar";
+const COMMENT_CLS = "comment";
+const COMMENTS_COUNT_FOR_SCROLL = 10;
+
+/**
+ * When we have to render the comment normally
+ */
+var DisplayComment = React.createClass({
+  /**
+   * Deleting a comment using the id props passed
+   * @param {*} event
+   */
+  deleteComment: function (event) {
+    this.props.deleteComment(this.props.id);
+  },
+  /**
+   * Render method for the display comment component.
+   */
+  render: function () {
+    return (
+      &lt;div className="comment-box">
+        &lt;span className="comment-text">{this.props.children}&lt;/span>
+        &lt;button
+          className="button-primary"
+          onClick={(e) => this.props.onEditComment()}
+        >
+          edit
+        &lt;/button>
+        &lt;button className="button-delete" onClick={this.deleteComment}>
+          delete
+        &lt;/button>
+      &lt;/div>
+    );
+  },
+});
+
+/**
+ * When we have to render the edit normally
+ */
+var EditComment = React.createClass({
+  /**
+   * After the text-box is rendered we have to do the operations such that selected / focus
+   * is being set.
+   */
+  componentDidMount: function () {
+    // console.log(`Edit component mounted.`);
+    // console.log(ReactDOM.findDOMNode(this.refs.commentText));
+    ReactDOM.findDOMNode(this.refs.commentText).select();
+    // ReactDOM.findDOMNode(this.refs.commentText).focus();
+  },
+
+  /**
+   * This will triggered only when Text box is unmounted or save is being clicked.
+   */
+  componentWillUnmount: function () {
+    console.log(`Edit component un-mounted.`);
+  },
+
+  /**
+   * Rendering the Form for editing the comment
+   */
+  render: function () {
+    return (
+      &lt;div className="comment-box" style={{ alignItems: "center" }}>
+        &lt;textarea
+          style={{ width: "80%" }}
+          ref="commentText"
+          defaultValue={this.props.children}
+        >&lt;/textarea>
+        &lt;button
+          className="button-save"
+          onClick={() =>
+            this.props.onSaveComment(this.refs.commentText.value, this.props.id)
+          }
+        >
+          save
+        &lt;/button>
+      &lt;/div>
+    );
+  },
+});
+
+/**
+ * Comment component for the board
+ */
+var Comment = React.createClass({
+  /**
+   * Getting Initials state for the page
+   */
+  getInitialState: function () {
+    return { editMode: false };
+  },
+  /**
+   * saving the comment in the Array
+   * @param {*} event
+   */
+  handleSaveComment: function (value, id) {
+    if (value == "") {
+      alert("Please enter text to save");
+      return false;
+    }
+    this.props.saveComment(value, id);
+    this.setState({ editMode: false });
+  },
+
+  /**
+   * Editing the comment
+   * @param {*} event
+   */
+  handleEditComment: function (event) {
+    this.setState({ editMode: true });
+  },
+  /**
+   * comment rendering method
+   */
+  render: function () {
+    return this.state.editMode ? (
+      &lt;EditComment {...this.props} onSaveComment={this.handleSaveComment} />
+    ) : (
+      &lt;DisplayComment {...this.props} onEditComment={this.handleEditComment} />
+    );
+  },
+});
+/**
+ * Board component for the comments management.
+ */
+var Board = React.createClass({
+  /**
+   * Initially there are no comments on the board
+   */
+  getInitialState: function () {
+    return { comments: [] };
+  },
+  /**
+   * Adding comment on the board
+   */
+  addComment: function () {
+    let comments = this.state.comments;
+    // console.log(`adding comment...`);
+    comments.push(`Comment Default text..`);
+    this.setState({ comments: comments });
+  },
+  /**
+   * Deleting the comment from the board
+   * making this available to children via props.
+   * @param {*} index
+   */
+  deleteComment: function (index) {
+    let comments = this.state.comments;
+    comments.splice(index, 1);
+    this.setState({ comments: comments });
+  },
+  /**
+   * editing comment at a particular index
+   * @param {*} text
+   * @param {*} index
+   */
+  saveComment: function (text, index) {
+    let comments = this.state.comments;
+    comments[index] = text;
+    this.setState({ comments: comments });
+  },
+  /**
+   * Rendering comment on the board
+   */
+  renderComments: function () {
+    // console.log(this.state.comments);
+    return this.state.comments.map((text, index) => {
+      return (
+        &lt;Comment
+          key={index}
+          id={index}
+          deleteComment={this.deleteComment}
+          saveComment={this.saveComment}
+        >
+          ({index + 1}) {text}
+        &lt;/Comment>
+      );
+    });
+  },
+  /**
+   * Render the comment counter
+   */
+  renderCommentCounter: function () {
+    let count = this.state.comments.length;
+    return (
+      count > 0 &amp;&amp; (
+        &lt;span className="comment-count">Comment Count : {count}&lt;/span>
+      )
+    );
+  },
+  /**
+   * When number of comments are greater than what can fit in the view-port
+   * then we should put a scroll bar on the comments page.
+   */
+  addScrollbar() {
+    if (window &amp;&amp; typeof window == "object" &amp;&amp; this.state.comments.length > 0) {
+      // console.log(this.refs.commentBoxContainer);
+      if (this.state.comments.length > COMMENTS_COUNT_FOR_SCROLL) {
+        return `${COMMENT_CLS} ${SCROLLBAR_CLS}`;
+      }
+    }
+    return COMMENT_CLS;
+  },
+  /**
+   * rendering the board
+   */
+  render: function () {
+    return (
+      &lt;div>
+        &lt;button className="button-comment-add" onClick={this.addComment}>
+          Add Comment
+        &lt;/button>
+        {this.renderCommentCounter()}
+        &lt;button
+          className="button-comment-reset"
+          disabled={this.state.comments.length == 0}
+          onClick={() => this.setState({ comments: [] })}
+        >
+          reset
+        &lt;/button>
+        &lt;div ref="commentBoxContainer" className={this.addScrollbar()}>
+          {this.renderComments()}
+        &lt;/div>
+      &lt;/div>
+    );
+  },
+});
+/**
+ * Showing multiple components created in the main parent.
+ * Showing multiple components in the Dom using ReactDom.
+ */
+ReactDOM.render(&lt;Board />, document.getElementById("example"));
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addComment">addComment</a></li><li><a href="global.html#addScrollbar">addScrollbar</a></li><li><a href="global.html#Board">Board</a></li><li><a href="global.html#changeColor">changeColor</a></li><li><a href="global.html#ChildComponent">ChildComponent</a></li><li><a href="global.html#Comment">Comment</a></li><li><a href="global.html#Component">Component</a></li><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#componentWillUnmount">componentWillUnmount</a></li><li><a href="global.html#deleteComment">deleteComment</a></li><li><a href="global.html#DisplayComment">DisplayComment</a></li><li><a href="global.html#editComment">editComment</a></li><li><a href="global.html#EditComment">EditComment</a></li><li><a href="global.html#getInitialState">getInitialState</a></li><li><a href="global.html#handleEditComment">handleEditComment</a></li><li><a href="global.html#handleSaveComment">handleSaveComment</a></li><li><a href="global.html#ParentComponent">ParentComponent</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderComment">renderComment</a></li><li><a href="global.html#renderCommentCounter">renderCommentCounter</a></li><li><a href="global.html#renderComments">renderComments</a></li><li><a href="global.html#renderForm">renderForm</a></li><li><a href="global.html#saveComment">saveComment</a></li><li><a href="global.html#SCROLLBAR_CLS">SCROLLBAR_CLS</a></li><li><a href="global.html#showMyName">showMyName</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sat Dec 19 2020 16:11:36 GMT+0530 (India Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "react-stand-alone",
+  "version": "1.0.0",
+  "description": "this is standalone react building project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs-pls":"jsdoc ./src/js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prashantvermaiiitb/react-stand-alone.git"
+  },
+  "keywords": [
+    "react",
+    "standalone"
+  ],
+  "author": "Prashant Verma",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/prashantvermaiiitb/react-stand-alone/issues"
+  },
+  "homepage": "https://github.com/prashantvermaiiitb/react-stand-alone#readme",
+  "devDependencies": {
+    "js-doc": "^0.5.0"
+  }
+}
