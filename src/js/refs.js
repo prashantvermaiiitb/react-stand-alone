@@ -14,6 +14,10 @@ var Component = React.createClass({
    * Showing how to use refs in the page to get the value of DOM node and use that.
    */
   changeColor: function () {
+    if(this.refs.newTextBox.value === ''){
+      alert('Please enter valid value');
+      return false;
+    }
     this.setState({
       clicked: !this.state.clicked,
       text: this.refs.newTextBox.value,
@@ -38,7 +42,7 @@ var Component = React.createClass({
           className={this.state.clicked ? "active-button" : "inactive-button"}
           onClick={this.changeColor}
         >
-          Change Color
+          Read Input
         </button>
       </div>
     );
